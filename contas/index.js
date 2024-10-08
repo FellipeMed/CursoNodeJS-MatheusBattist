@@ -1,5 +1,6 @@
 //modulos externos
 const chalk = require('chalk')
+const fs = require('fs')
 const inquirer = require('inquirer')
 //modulos interno
 
@@ -28,4 +29,24 @@ function operation(){
 function createAccount(){
     console.log(chalk.bgGreen.black("Parabens por criar a conta!!!"))
     console.log(chalk.green('Defina as opcoes para sua conta'))
+
+    buildAccount()
+}
+
+function buildAccount(){
+    inquirer.prompt([{
+        name: 'accountName',
+        message: ' Digite o nome para sua conta:'
+    }]).then(answer => {
+        console.log(answer['accountName'])
+
+        if(!fs.existsSync('accounts')){
+            fs.mkdrSync('accounts')
+        }
+
+        if(!fs.existsSync(`accounts/${accountName}.json`)){
+            
+        }
+
+    }).catch((err)=>{console.log(err)})
 }
