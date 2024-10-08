@@ -22,6 +22,14 @@ function operation(){
 
         if(action === 'Criar conta'){
             createAccount()
+        } else if( action === 'Depositar'){
+            deposito()
+        } else if( action === 'Consultar saldo'){
+
+        } else if( action === 'sacar'){
+
+        } else if( action === 'Sair'){
+
         }
     }).catch((err) => console.log(err))
 }
@@ -38,15 +46,53 @@ function buildAccount(){
         name: 'accountName',
         message: ' Digite o nome para sua conta:'
     }]).then(answer => {
-        console.log(answer['accountName'])
+        const accountName = answer['accountName']
 
         if(!fs.existsSync('accounts')){
-            fs.mkdrSync('accounts')
+            fs.mkdirSync('accounts')
         }
 
-        if(!fs.existsSync(`accounts/${accountName}.json`)){
-            
+        if(fs.existsSync(`accounts/${accountName}.json`)){
+            console.log(chalk.bgRed.black("Essa conta ja existe"))
+            buildAccount()
+            return
         }
+
+        fs.writeFileSync(`accounts/${accountName}.json`, '{"balance": 0}', (err) =>{ console.log(err) })
+
+        console.log(chalk.bgGreen.bold("Parabéns, sua conta foi criada!"))
 
     }).catch((err)=>{console.log(err)})
+}
+
+function deposito(){
+    inquirer.prompt([
+        {
+            name: 'accountName',
+            message: 'Qual o nome da sua conta?'
+        }
+    ]).then((answer)=>{
+        const accountName = answer['accountNane']
+        
+        if(!checkAccount(accountName)){
+            return deposito()
+        }
+
+        inquirer.prompt([{
+            name: 'amount',
+            message: 'Quanto vc deseja depositar?'
+        }]).then((answer) => {
+            const amount = answer['amount']
+            // operation add
+        }).catch(err => console.log(err))
+    }).catch(err => console.log(err))
+}
+
+function checkAccount(accountName){
+    if(!fs.existsSync(`accounts/${accountName}.json`)){
+        console.log(chalk.bgRed('Esta conta não existe'))
+        return false
+    }
+
+    return true
 }
