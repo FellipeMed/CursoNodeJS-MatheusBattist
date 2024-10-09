@@ -72,7 +72,7 @@ function deposito(){
             message: 'Qual o nome da sua conta?'
         }
     ]).then((answer)=>{
-        const accountName = answer['accountNane']
+        const accountName = answer['accountName']
         
         if(!checkAccount(accountName)){
             return deposito()
@@ -83,7 +83,9 @@ function deposito(){
             message: 'Quanto vc deseja depositar?'
         }]).then((answer) => {
             const amount = answer['amount']
-            // operation add
+
+            addAmount(accountName, amount)
+            operation()
         }).catch(err => console.log(err))
     }).catch(err => console.log(err))
 }
@@ -95,4 +97,21 @@ function checkAccount(accountName){
     }
 
     return true
+}
+
+function addAmount(accountName, amount){
+
+    const account = getAccount(accountName)
+    console.log(account)
+
+
+}
+
+function getAccount(accountName){
+ const accountJSON = fs.readFileSync(`accounts/${accountName}.json`, { 
+    encoding: 'utf8',
+    flag: 'r'
+ })   
+
+ return JSON.parse(accountJSON)
 }
